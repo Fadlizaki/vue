@@ -6,6 +6,9 @@ import Produk from "/src/views/Produk.vue";
 import Kategori from "/src/views/Kategori.vue";
 import Detail from "/src/views/Detail.vue";
 import Detailkategori from "/src/views/DetailKategori.vue";
+import PageNotfound from "/src/views/PageNotFound.vue";
+import Login from "/src/views/Login.vue";
+import {users} from "/src/assets/user.js"
 
 
 const routes = [
@@ -25,33 +28,51 @@ const routes = [
         component: Contact,
     },
     {
-        path: "/produk",
-        name: "Produk",
-        component: Produk,
-    },
-    {
         path: "/kategori",
         name: "Kategori",
         component: Kategori,
     },
+    {
+        path: "/detailkategori/:id_kategori",
+        name: "Detailkategori",
+        component: Detailkategori,
+
+        props: true,
+    },
+    {
+        path: "/login", 
+        name: "Login",
+        component: Login, 
+        props: true,
+    },
+    { 
+        path: "/produk",
+        name: "Produk",
+        component: Produk,
+        beforeEnter: (to, from, next) => {
+        const loggedInUser = true;
+        if (loggedInUser) {
+        next (); // Lanjutkan navigasi ke halaman produk jika sudah login
+        } 
+        else {
+        next("/login"); // Alihkan ke halaman login jika belum login
+        }
+        },
+        },
     {
         path: "/detail/:id_produk",
         name: "Detail",
         component: Detail,
         props: true,
     },
-    {
-        path: "/detailkategori/:id_kategori",
-        name: "Detailkategori",
-        component: Detailkategori,
-        props: true,
-    }
+
+        { path: "/:pathMatch(.*)*", component: PageNotfound },
     
 ];
 
 const router = createRouter({
     history: createWebHistory(),
-    routes
-})
+    routes,
+});
 
 export default router;
